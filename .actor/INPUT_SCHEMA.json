@@ -1,0 +1,99 @@
+{
+  "title": "Google Web Search Scraper Input",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "queries": {
+      "title": "Search queries",
+      "type": "string",
+      "description": "One search query per line. You can use regular keywords or advanced operators like `site:`, `filetype:`, `intitle:`, etc. You can also paste full Google Search URLs.\n\nExamples:\n- `best javascript frameworks 2024`\n- `site:reddit.com typescript tips`\n- `\"exact phrase search\"`",
+      "editor": "textarea",
+      "prefill": "apify web scraping"
+    },
+    "maxPagesPerQuery": {
+      "title": "Max pages per query",
+      "type": "integer",
+      "description": "Number of Google Search result pages to scrape per query. Each page contains up to 10 organic results.",
+      "default": 1,
+      "minimum": 1,
+      "maximum": 50,
+      "editor": "number"
+    },
+    "countryCode": {
+      "title": "Country",
+      "type": "string",
+      "description": "Country for the Google Search domain (e.g. `us` → google.com, `de` → google.de, `gb` → google.co.uk). Affects which Google domain is used and the localization of results.",
+      "default": "us",
+      "editor": "textfield"
+    },
+    "languageCode": {
+      "title": "Interface language",
+      "type": "string",
+      "description": "Language of the Google Search interface (menus, labels). Passed as the `hl` URL parameter. Example: `en`, `de`, `fr`.",
+      "default": "en",
+      "editor": "textfield"
+    },
+    "searchLanguage": {
+      "title": "Restrict results to language",
+      "type": "string",
+      "description": "Restricts search results to pages written in a specific language. Passed as the `lr` URL parameter. Example: `en`, `de`, `fr`. Leave empty to return results in all languages.",
+      "default": "",
+      "editor": "textfield"
+    },
+    "mobileResults": {
+      "title": "Mobile results",
+      "type": "boolean",
+      "description": "If enabled, uses a mobile User-Agent and returns the mobile version of Google Search results.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "forceExactMatch": {
+      "title": "Force exact match",
+      "type": "boolean",
+      "description": "Wraps the query in quotes to force Google to return exact phrase matches.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "site": {
+      "title": "Restrict to site",
+      "type": "string",
+      "description": "Limits results to a specific website using the `site:` operator. Example: `reddit.com`, `wikipedia.org`.",
+      "default": "",
+      "editor": "textfield"
+    },
+    "quickDateRange": {
+      "title": "Date range",
+      "type": "string",
+      "description": "Filter results by recency. Format: `h[n]` (hours), `d[n]` (days), `w[n]` (weeks), `m[n]` (months), `y[n]` (years). Examples: `d7` (last 7 days), `m3` (last 3 months), `y1` (last year). Leave empty for no date filter.",
+      "default": "",
+      "editor": "textfield"
+    },
+    "saveHtml": {
+      "title": "Save raw HTML",
+      "type": "boolean",
+      "description": "If enabled, saves the raw HTML of each Google Search results page in the dataset record under the `html` field. Useful for debugging or re-parsing, but significantly increases dataset size.",
+      "default": false,
+      "editor": "checkbox"
+    },
+    "proxyConfiguration": {
+      "title": "Proxy configuration",
+      "type": "object",
+      "description": "Proxy settings for the scraper. A proxy is required — Google blocks bare datacenter IPs. Apify datacenter proxies are used by default if left empty. For best results and to avoid CAPTCHAs, use Apify Residential proxies.",
+      "editor": "proxy",
+      "prefill": {
+        "useApifyProxy": true,
+        "apifyProxyGroups": ["RESIDENTIAL"]
+      }
+    },
+    "maxConcurrency": {
+      "title": "Max concurrency",
+      "type": "integer",
+      "description": "Maximum number of search queries to process in parallel. Keep low (1–5) to reduce the risk of rate limiting.",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 20,
+      "editor": "number"
+    }
+  },
+  "required": ["queries"]
+}

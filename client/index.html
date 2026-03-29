@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Search</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- Search view -->
+  <div id="view-search">
+    <h1>Search</h1>
+    <form class="search-form" id="search-form">
+      <div class="search-input-row">
+        <input type="text" id="q" placeholder="Search the web..." autocomplete="off" required />
+        <button type="submit" class="btn-search">Search</button>
+      </div>
+      <div class="search-filters">
+        <select id="countryCode" title="Country">
+          <option value="us">United States</option>
+          <option value="gb">United Kingdom</option>
+          <option value="au">Australia</option>
+          <option value="ca">Canada</option>
+          <option value="de">Germany</option>
+          <option value="fr">France</option>
+          <option value="es">Spain</option>
+          <option value="it">Italy</option>
+          <option value="nl">Netherlands</option>
+          <option value="br">Brazil</option>
+          <option value="in">India</option>
+          <option value="jp">Japan</option>
+        </select>
+        <select id="languageCode" title="Language">
+          <option value="en">English</option>
+          <option value="de">German</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="nl">Dutch</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+    </form>
+  </div>
+
+  <!-- Results view -->
+  <div id="view-results" class="hidden">
+    <div class="results-header">
+      <div class="results-header-search">
+        <input type="text" id="results-q" placeholder="Search..." />
+        <button type="button" class="btn-search" id="results-search-btn">Search</button>
+      </div>
+      <button type="button" class="btn-back" id="btn-back">Back</button>
+    </div>
+    <div id="results-count" class="results-count"></div>
+    <div id="results-container"></div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" class="hidden">Searching...</div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden"></div>
+
+  <script type="module" src="/js/views/search.js"></script>
+  <script type="module" src="/js/views/results.js"></script>
+
+</body>
+</html>
