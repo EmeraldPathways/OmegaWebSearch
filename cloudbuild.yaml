@@ -1,0 +1,44 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/omegawebsearch/omega-web-search:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/omegawebsearch/omega-web-search:latest'
+      - '.'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/omegawebsearch/omega-web-search:$SHORT_SHA'
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'omega-web-search'
+      - '--image'
+      - 'gcr.io/omegawebsearch/omega-web-search:$SHORT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-secrets'
+      - 'API_SECRET_KEY=API_SECRET_KEY:latest,APIFY_TOKEN=APIFY_TOKEN:latest'
+      - '--set-env-vars'
+      - 'APIFY_ACTOR_ID=apify/google-search-scraper,APIFY_RUN_TIMEOUT_SECS=120,MAX_CONCURRENT_APIFY_RUNS=5'
+      - '--port'
+      - '3000'
+
+images:
+  - 'gcr.io/omegawebsearch/omega-web-search:$SHORT_SHA'
+  - 'gcr.io/omegawebsearch/omega-web-search:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

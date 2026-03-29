@@ -12,6 +12,11 @@ app.use(express.json());
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '../../client')));
 
+// Health check for Cloud Run
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
 // Exposes the API key so the browser can authenticate against /v1/ endpoints.
 // The key is not truly secret client-side — it limits unintentional abuse only.
 app.get('/config', (_req, res) => {
