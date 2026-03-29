@@ -4,8 +4,10 @@ import { renderAllResults } from './results.js';
 
 const form = document.getElementById('search-form');
 const inputs = ['q1','q2','q3','q4','q5'].map(id => document.getElementById(id));
-const countrySelect = document.getElementById('countryCode');
-const languageSelect = document.getElementById('languageCode');
+
+// Hardcoded: Ireland (IE) / English (EN)
+const COUNTRY_CODE = 'ie';
+const LANGUAGE_CODE = 'en';
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -22,7 +24,7 @@ form.addEventListener('submit', async (e) => {
   showLoading(true);
   try {
     const settled = await Promise.allSettled(
-      queries.map(q => search({ q, page: 0, countryCode: countrySelect.value, languageCode: languageSelect.value }))
+      queries.map(q => search({ q, page: 0, countryCode: COUNTRY_CODE, languageCode: LANGUAGE_CODE }))
     );
     
     const results = settled.map((outcome, i) => ({
