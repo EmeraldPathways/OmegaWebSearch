@@ -1,46 +1,58 @@
-import { showView, showLoading, showToast, escHtml } from '../nav.js';
-import { doSearch, currentQuery } from './search.js';
+import { showView, escHtml } from '../nav.js';
 
 const container = document.getElementById('results-container');
-const countEl = document.getElementById('results-count');
-const resultsQInput = document.getElementById('results-q');
-const resultsSearchBtn = document.getElementById('results-search-btn');
 const btnBack = document.getElementById('btn-back');
 
 btnBack.addEventListener('click', () => showView('view-search'));
 
-resultsSearchBtn.addEventListener('click', () => {
-  const q = resultsQInput.value.trim();
-  if (!q || !currentQuery) return;
-  doSearch({ ...currentQuery, q, page: 0 });
-});
-
-resultsQInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') resultsSearchBtn.click();
-});
-
-export function renderResults(data, query, page) {
-  resultsQInput.value = query.q;
+export function renderAllResults(results) {
   container.innerHTML = '';
-  countEl.textContent = data.resultsCountText ?? '';
+  for (const entry of results) {
+    container.appendChild(buildQuerySection(entry));
+  }
+}
+
+function buildQuerySection({ query, data, error }) {
+  const section = document.createElement('div');
+  section.className = 'query-section';
+
+  const header = document.createElement('h2');
+  header.className = 'query-section-header';
+  header.textContent = query;
+  section.appendChild(header);
+
+  if (error) {
+    const errDiv = document.createElement('div');
+    errDiv.className = 'query-section-error';
+    errDiv.textContent = `Search failed: ${error}`;
+    section.appendChild(errDiv);
+    return section;
+  }
+
+  if (data.resultsCountText) {
+    const countDiv = document.createElement('div');
+    countDiv.className = 'results-count';
+    countDiv.textContent = data.resultsCountText;
+    section.appendChild(countDiv);
+  }
 
   if (data.featuredSnippet) {
-    container.appendChild(buildFeaturedSnippet(data.featuredSnippet));
+    section.appendChild(buildFeaturedSnippet(data.featuredSnippet));
   }
 
   for (const result of data.organicResults ?? []) {
-    container.appendChild(buildResultCard(result));
+    section.appendChild(buildResultCard(result));
   }
 
-  container.appendChild(buildPagination(data, query, page));
-
   if (data.peopleAlsoAsk?.length) {
-    container.appendChild(buildPAA(data.peopleAlsoAsk));
+    section.appendChild(buildPAA(data.peopleAlsoAsk));
   }
 
   if (data.relatedQueries?.length) {
-    container.appendChild(buildRelated(data.relatedQueries, query));
+    section.appendChild(buildRelated(data.relatedQueries));
   }
+
+  return section;
 }
 
 function buildFeaturedSnippet(snippet) {
@@ -74,35 +86,6 @@ function buildResultCard(result) {
   return div;
 }
 
-function buildPagination(data, query, page) {
-  const div = document.createElement('div');
-  div.className = 'pagination';
-
-  const prevBtn = document.createElement('button');
-  prevBtn.className = 'btn-page';
-  prevBtn.textContent = 'Previous';
-  prevBtn.disabled = page === 0;
-  prevBtn.addEventListener('click', () => {
-    showLoading(true);
-    doSearch({ ...query, page: page - 1 })
-      .finally(() => showLoading(false));
-  });
-
-  const nextBtn = document.createElement('button');
-  nextBtn.className = 'btn-page';
-  nextBtn.textContent = 'Next';
-  nextBtn.disabled = !data.hasNextPage;
-  nextBtn.addEventListener('click', () => {
-    showLoading(true);
-    doSearch({ ...query, page: page + 1 })
-      .finally(() => showLoading(false));
-  });
-
-  div.appendChild(prevBtn);
-  div.appendChild(nextBtn);
-  return div;
-}
-
 function buildPAA(items) {
   const section = document.createElement('div');
   section.className = 'paa-section';
@@ -111,19 +94,12 @@ function buildPAA(items) {
   return section;
 }
 
-function buildRelated(queries, query) {
+function buildRelated(queries) {
   const section = document.createElement('div');
   section.className = 'related-section';
   const chipsHtml = queries.map(q =>
-    `<button class="related-chip" data-q="${escHtml(q)}">${escHtml(q)}</button>`
+    `<span class="related-chip">${escHtml(q)}</span>`
   ).join('');
   section.innerHTML = `<h3>Related Searches</h3><div class="related-chips">${chipsHtml}</div>`;
-
-  section.querySelectorAll('.related-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      doSearch({ ...query, q: btn.dataset.q, page: 0 });
-    });
-  });
-
   return section;
 }

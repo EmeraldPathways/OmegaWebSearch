@@ -1,35 +1,41 @@
 import { search } from '../api.js';
 import { showView, showLoading, showToast } from '../nav.js';
-import { renderResults } from './results.js';
+import { renderAllResults } from './results.js';
 
 const form = document.getElementById('search-form');
-const qInput = document.getElementById('q');
+const inputs = ['q1','q2','q3','q4','q5'].map(id => document.getElementById(id));
 const countrySelect = document.getElementById('countryCode');
 const languageSelect = document.getElementById('languageCode');
 
-export let currentQuery = null;
-
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  await doSearch({
-    q: qInput.value.trim(),
-    countryCode: countrySelect.value,
-    languageCode: languageSelect.value,
-    page: 0,
-  });
-});
+  
+  const queries = inputs
+    .map(i => i.value.trim())
+    .filter(q => q.length > 0);
+  
+  if (queries.length === 0) {
+    showToast('Enter at least one search query.', 'error');
+    return;
+  }
 
-export async function doSearch({ q, countryCode, languageCode, page }) {
-  if (!q) return;
   showLoading(true);
   try {
-    const data = await search({ q, page, countryCode, languageCode });
-    currentQuery = { q, countryCode, languageCode };
-    renderResults(data, currentQuery, page);
+    const settled = await Promise.allSettled(
+      queries.map(q => search({ q, page: 0, countryCode: countrySelect.value, languageCode: languageSelect.value }))
+    );
+    
+    const results = settled.map((outcome, i) => ({
+      query: queries[i],
+      data: outcome.status === 'fulfilled' ? outcome.value : null,
+      error: outcome.status === 'rejected' ? outcome.reason.message : null,
+    }));
+    
+    renderAllResults(results);
     showView('view-results');
   } catch (err) {
     showToast(err.message, 'error');
   } finally {
     showLoading(false);
   }
-}
+});

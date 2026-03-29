@@ -12,14 +12,19 @@
   <div id="view-search">
     <h1>Search</h1>
     <form class="search-form" id="search-form">
-      <div class="search-input-row">
-        <input type="text" id="q" placeholder="Search the web..." autocomplete="off" required />
-        <button type="submit" class="btn-search">Search</button>
+      <div class="search-inputs-list">
+        <input type="text" id="q1" value="Alexander Lockley Grange Medical Practice Gp email address" autocomplete="off" />
+        <input type="text" id="q2" value="Ali Alsaad Blackglen Medical Gp email address" autocomplete="off" />
+        <input type="text" id="q3" value="Alicia Flynn The Surgery Gp email address" autocomplete="off" />
+        <input type="text" id="q4" value="Alina Zidaru Millbrook Lawn Health Centre Gp email address" autocomplete="off" />
+        <input type="text" id="q5" value="Alison Hampson 40 Whitethorn Rise Gp email address" autocomplete="off" />
       </div>
+      <button type="submit" class="btn-search">Search All</button>
       <div class="search-filters">
         <select id="countryCode" title="Country">
           <option value="us">United States</option>
           <option value="gb">United Kingdom</option>
+          <option value="ie">Ireland</option>
           <option value="au">Australia</option>
           <option value="ca">Canada</option>
           <option value="de">Germany</option>
@@ -48,13 +53,8 @@
   <!-- Results view -->
   <div id="view-results" class="hidden">
     <div class="results-header">
-      <div class="results-header-search">
-        <input type="text" id="results-q" placeholder="Search..." />
-        <button type="button" class="btn-search" id="results-search-btn">Search</button>
-      </div>
-      <button type="button" class="btn-back" id="btn-back">Back</button>
+      <button type="button" class="btn-back" id="btn-back">← Back to Search</button>
     </div>
-    <div id="results-count" class="results-count"></div>
     <div id="results-container"></div>
   </div>
 

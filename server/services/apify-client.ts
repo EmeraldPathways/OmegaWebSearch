@@ -14,7 +14,7 @@ const COUNTRY_TO_TLD: Record<string, string> = {
   tr: 'com.tr', il: 'co.il', sa: 'com.sa', ae: 'ae', pk: 'com.pk',
   bd: 'com.bd', nz: 'co.nz', se: 'se', no: 'no', dk: 'dk', fi: 'fi',
   cz: 'cz', hu: 'hu', ro: 'ro', sk: 'sk', gr: 'gr', bg: 'bg',
-  hr: 'hr', rs: 'rs',
+  hr: 'hr', rs: 'rs', ie: 'ie',
 };
 
 function buildGoogleUrl(q: string, page: number, countryCode: string, languageCode: string): string {
