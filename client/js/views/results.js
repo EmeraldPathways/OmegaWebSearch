@@ -5,6 +5,9 @@ const btnBack = document.getElementById('btn-back');
 
 btnBack.addEventListener('click', () => showView('view-search'));
 
+// Limit results per search
+const MAX_RESULTS_PER_SEARCH = 3;
+
 export function renderAllResults(results) {
   container.innerHTML = '';
   for (const entry of results) {
@@ -40,7 +43,7 @@ function buildQuerySection({ query, data, error }) {
     section.appendChild(buildFeaturedSnippet(data.featuredSnippet));
   }
 
-  for (const result of data.organicResults ?? []) {
+  for (const result of (data.organicResults ?? []).slice(0, MAX_RESULTS_PER_SEARCH)) {
     section.appendChild(buildResultCard(result));
   }
 

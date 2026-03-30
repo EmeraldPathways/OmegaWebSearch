@@ -3,18 +3,21 @@ import { showView, showLoading, showToast } from '../nav.js';
 import { renderAllResults } from './results.js';
 
 const form = document.getElementById('search-form');
-const inputs = ['q1','q2','q3','q4','q5'].map(id => document.getElementById(id));
+const textarea = document.getElementById('queries');
 
 // Hardcoded: Ireland (IE) / English (EN)
 const COUNTRY_CODE = 'ie';
 const LANGUAGE_CODE = 'en';
+const MAX_QUERIES = 10;
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  const queries = inputs
-    .map(i => i.value.trim())
-    .filter(q => q.length > 0);
+  const queries = textarea.value
+    .split('\n')
+    .map(q => q.trim())
+    .filter(q => q.length > 0)
+    .slice(0, MAX_QUERIES);
   
   if (queries.length === 0) {
     showToast('Enter at least one search query.', 'error');
